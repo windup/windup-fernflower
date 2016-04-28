@@ -57,7 +57,12 @@ public class VarProcessor {
     Map<Integer, Integer> mapOriginalVarIndices = varVersions.getMapOriginalVarIndices();
 
     List<VarVersionPair> listVars = new ArrayList<VarVersionPair>(mapVarNames.keySet());
-    Collections.sort(listVars, (o1, o2) -> o1.var - o2.var);
+    Collections.sort(listVars, new Comparator<VarVersionPair>() {
+      @Override
+      public int compare(VarVersionPair o1, VarVersionPair o2) {
+        return o1.var - o2.var;
+      }
+    });
 
     Map<String, Integer> mapNames = new HashMap<String, Integer>();
 
