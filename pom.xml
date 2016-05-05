@@ -15,6 +15,19 @@
 
     <name>Windup Maven Build of Fernflower</name>
 
+    <properties>
+        <windup-fernflower.scm.connection>scm:git:https://github.com/windup/windup-fernflower.git</windup-fernflower.scm.connection>
+        <windup-fernflower.developer.connection>scm:git:git@github.com:windup/windup-fernflower.git</windup-fernflower.developer.connection>
+        <windup-fernflower.scm.url>http://github.com/windup/windup-fernflower</windup-fernflower.scm.url>
+    </properties>
+
+    <scm>
+        <tag>master</tag>
+        <connection>${windup-fernflower.scm.connection}</connection>
+        <developerConnection>${windup-fernflower.developer.connection}</developerConnection>
+        <url>${windup-fernflower.scm.url}</url>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
