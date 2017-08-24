@@ -10,7 +10,7 @@
 
     <groupId>org.jboss.windup.decompiler.fernflower</groupId>
     <artifactId>windup-fernflower</artifactId>
-    <version>1.0.0.20160505b</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Windup Maven Build of Fernflower</name>
@@ -22,7 +22,7 @@
     </properties>
 
     <scm>
-        <tag>1.0.0.20160505b</tag>
+        <tag>master</tag>
         <connection>${windup-fernflower.scm.connection}</connection>
         <developerConnection>${windup-fernflower.developer.connection}</developerConnection>
         <url>${windup-fernflower.scm.url}</url>
