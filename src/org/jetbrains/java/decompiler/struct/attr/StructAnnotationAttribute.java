@@ -143,7 +143,7 @@ public class StructAnnotationAttribute extends StructGeneralAttribute {
           newType = new VarType(elementType.type, 1, elementType.value);
         }
 
-        NewExprent newExpr = new NewExprent(newType, Collections.emptyList(), null);
+        NewExprent newExpr = new NewExprent(newType, Collections.<Exprent>emptyList(), null);
         newExpr.setDirectArrayInit(true);
         newExpr.setLstArrayElements(elements);
         return newExpr;
