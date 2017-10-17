@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import org.jetbrains.java.decompiler.struct.attr.StructExceptionsAttribute;
 import org.jetbrains.java.decompiler.struct.gen.VarType;
 import org.jetbrains.java.decompiler.struct.match.MatchEngine;
 import org.jetbrains.java.decompiler.struct.match.MatchNode;
-import org.jetbrains.java.decompiler.struct.match.IMatchable.MatchProperties;
 import org.jetbrains.java.decompiler.util.InterpreterUtil;
 
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class ExitExprent extends Exprent {
 
   @Override
   public List<Exprent> getAllExprents() {
-    List<Exprent> lst = new ArrayList<Exprent>();
+    List<Exprent> lst = new ArrayList<>();
     if (value != null) {
       lst.add(value);
     }
@@ -83,24 +82,24 @@ public class ExitExprent extends Exprent {
     tracer.addMapping(bytecode);
 
     if (exitType == EXIT_RETURN) {
-      TextBuffer buffer = new TextBuffer();
+      TextBuffer buffer = new TextBuffer("return");
 
       if (retType.type != CodeConstants.TYPE_VOID) {
-        buffer.append(" ");
+        buffer.append(' ');
         if (indent > 450) {
           throw new RuntimeException("Failed due to excessive recursion... recursion count: " + indent);
         }
         ExprProcessor.getCastedExprent(value, retType, buffer, indent, false, tracer);
       }
 
-      return buffer.prepend("return");
+      return buffer;
     }
     else {
       MethodWrapper method = (MethodWrapper)DecompilerContext.getProperty(DecompilerContext.CURRENT_METHOD_WRAPPER);
       ClassNode node = ((ClassNode)DecompilerContext.getProperty(DecompilerContext.CURRENT_CLASS_NODE));
 
       if (method != null && node != null) {
-        StructExceptionsAttribute attr = (StructExceptionsAttribute)method.methodStruct.getAttributes().getWithKey("Exceptions");
+        StructExceptionsAttribute attr = (StructExceptionsAttribute)method.methodStruct.getAttribute("Exceptions");
 
         if (attr != null) {
           String classname = null;
@@ -118,9 +117,9 @@ public class ExitExprent extends Exprent {
 
           if (classname != null) {
             VarType exType = new VarType(classname, true);
-            TextBuffer buffer = new TextBuffer();
+            TextBuffer buffer = new TextBuffer("throw ");
             ExprProcessor.getCastedExprent(value, exType, buffer, indent, false, tracer);
-            return buffer.prepend("throw ");
+            return buffer;
           }
         }
       }

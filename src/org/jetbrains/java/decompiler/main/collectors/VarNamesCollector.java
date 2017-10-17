@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
  */
 package org.jetbrains.java.decompiler.main.collectors;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class VarNamesCollector {
 
-  private final Set<String> usedNames = new HashSet<String>();
+  private final Set<String> usedNames = new HashSet<>();
 
   public VarNamesCollector() { }
 
-  public VarNamesCollector(Set<String> setNames) {
+  public VarNamesCollector(Collection<String> setNames) {
     usedNames.addAll(setNames);
   }
 

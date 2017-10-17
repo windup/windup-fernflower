@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class NestedMemberAccess {
   private enum MethodAccess {NORMAL, FIELD_GET, FIELD_SET, METHOD, FUNCTION}
 
   private boolean noSynthFlag;
-  private final Map<MethodWrapper, MethodAccess> mapMethodType = new HashMap<MethodWrapper, MethodAccess>();
+  private final Map<MethodWrapper, MethodAccess> mapMethodType = new HashMap<>();
 
 
   public void propagateMemberAccess(ClassNode root) {
@@ -149,19 +149,21 @@ public class NestedMemberAccess {
 
               InvocationExprent invexpr = (InvocationExprent)exprCore;
 
-              if ((invexpr.isStatic() && invexpr.getLstParameters().size() == parcount) ||
-                  (!invexpr.isStatic() && invexpr.getInstance().type == Exprent.EXPRENT_VAR
+              boolean isStatic = invexpr.isStatic();
+              if ((isStatic && invexpr.getLstParameters().size() == parcount) ||
+                  (!isStatic && invexpr.getInstance().type == Exprent.EXPRENT_VAR
                    && ((VarExprent)invexpr.getInstance()).getIndex() == 0 && invexpr.getLstParameters().size() == parcount - 1)) {
 
                 boolean equalpars = true;
 
+                int index = isStatic ? 0 : 1;
                 for (int i = 0; i < invexpr.getLstParameters().size(); i++) {
                   Exprent parexpr = invexpr.getLstParameters().get(i);
-                  if (parexpr.type != Exprent.EXPRENT_VAR ||
-                      ((VarExprent)parexpr).getIndex() != i + (invexpr.isStatic() ? 0 : 1)) {
+                  if (parexpr.type != Exprent.EXPRENT_VAR || ((VarExprent)parexpr).getIndex() != index) {
                     equalpars = false;
                     break;
                   }
+                  index += mtdesc.params[i + (isStatic ? 0 : 1)].stackSize;
                 }
 
                 if (equalpars) {
@@ -231,8 +233,8 @@ public class NestedMemberAccess {
 
         DirectGraph graph = meth.getOrBuildGraph();
 
-        HashSet<DirectNode> setVisited = new HashSet<DirectNode>();
-        LinkedList<DirectNode> stack = new LinkedList<DirectNode>();
+        HashSet<DirectNode> setVisited = new HashSet<>();
+        LinkedList<DirectNode> stack = new LinkedList<>();
         stack.add(graph.first);
 
         while (!stack.isEmpty()) {  // TODO: replace with interface iterator?

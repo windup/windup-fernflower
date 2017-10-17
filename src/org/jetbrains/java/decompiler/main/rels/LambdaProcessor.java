@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class LambdaProcessor {
     }
 
     StructBootstrapMethodsAttribute bootstrap =
-      (StructBootstrapMethodsAttribute)cl.getAttributes().getWithKey(StructGeneralAttribute.ATTRIBUTE_BOOTSTRAP_METHODS);
+      (StructBootstrapMethodsAttribute)cl.getAttribute(StructGeneralAttribute.ATTRIBUTE_BOOTSTRAP_METHODS);
     if (bootstrap == null || bootstrap.getMethodsNumber() == 0) {
       return false; // no bootstrap constants in pool
     }
@@ -78,7 +78,7 @@ public class LambdaProcessor {
       return false; // no lambda bootstrap constant found
     }
 
-    Map<String, String> mapMethodsLambda = new HashMap<String, String>();
+    Map<String, String> mapMethodsLambda = new HashMap<>();
 
     // iterate over code and find invocations of bootstrap methods. Replace them with anonymous classes.
     for (StructMethod mt : cl.getMethods()) {

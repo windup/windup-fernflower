@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import java.util.List;
 
 public class DataPoint {
 
-  private List<VarType> localVariables = new ArrayList<VarType>();
+  private List<VarType> localVariables = new ArrayList<>();
 
-  private ListStack<VarType> stack = new ListStack<VarType>();
+  private ListStack<VarType> stack = new ListStack<>();
 
 
   public void setVariable(int index, VarType value) {
@@ -43,9 +43,6 @@ public class DataPoint {
     if (index < localVariables.size()) {
       return localVariables.get(index);
     }
-    else if (index < 0) {
-      throw new IndexOutOfBoundsException();
-    }
     else {
       return new VarType(CodeConstants.TYPE_NOTINITIALIZED);
     }
@@ -53,7 +50,7 @@ public class DataPoint {
 
   public DataPoint copy() {
     DataPoint point = new DataPoint();
-    point.setLocalVariables(new ArrayList<VarType>(localVariables));
+    point.setLocalVariables(new ArrayList<>(localVariables));
     point.setStack(stack.clone());
     return point;
   }

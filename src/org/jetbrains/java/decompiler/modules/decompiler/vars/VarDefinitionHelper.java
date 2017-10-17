@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,9 +45,9 @@ public class VarDefinitionHelper {
 
   public VarDefinitionHelper(Statement root, StructMethod mt, VarProcessor varproc) {
 
-    mapVarDefStatements = new HashMap<Integer, Statement>();
-    mapStatementVars = new HashMap<Integer, HashSet<Integer>>();
-    implDefVars = new HashSet<Integer>();
+    mapVarDefStatements = new HashMap<>();
+    mapStatementVars = new HashMap<>();
+    implDefVars = new HashSet<>();
 
     this.varproc = varproc;
 
@@ -92,7 +92,7 @@ public class VarDefinitionHelper {
     }
 
     // catch variables are implicitly defined
-    LinkedList<Statement> stack = new LinkedList<Statement>();
+    LinkedList<Statement> stack = new LinkedList<>();
     stack.add(root);
 
     while (!stack.isEmpty()) {
@@ -211,7 +211,7 @@ public class VarDefinitionHelper {
 
   private Statement findFirstBlock(Statement stat, Integer varindex) {
 
-    LinkedList<Statement> stack = new LinkedList<Statement>();
+    LinkedList<Statement> stack = new LinkedList<>();
     stack.add(stat);
 
     while (!stack.isEmpty()) {
@@ -251,15 +251,15 @@ public class VarDefinitionHelper {
 
   private Set<Integer> initStatement(Statement stat) {
 
-    HashMap<Integer, Integer> mapCount = new HashMap<Integer, Integer>();
+    HashMap<Integer, Integer> mapCount = new HashMap<>();
 
     List<VarExprent> condlst;
 
     if (stat.getExprents() == null) {
 
       // recurse on children statements
-      List<Integer> childVars = new ArrayList<Integer>();
-      List<Exprent> currVars = new ArrayList<Exprent>();
+      List<Integer> childVars = new ArrayList<>();
+      List<Exprent> currVars = new ArrayList<>();
 
       for (Object obj : stat.getSequentialObjects()) {
         if (obj instanceof Statement) {
@@ -289,9 +289,9 @@ public class VarDefinitionHelper {
       for (Integer index : childVars) {
         Integer count = mapCount.get(index);
         if (count == null) {
-          count = new Integer(0);
+          count = 0;
         }
-        mapCount.put(index, new Integer(count.intValue() + 1));
+        mapCount.put(index, count + 1);
       }
 
       condlst = getAllVars(currVars);
@@ -302,11 +302,11 @@ public class VarDefinitionHelper {
 
     // this statement
     for (VarExprent var : condlst) {
-      mapCount.put(new Integer(var.getIndex()), new Integer(2));
+      mapCount.put(var.getIndex(), 2);
     }
 
 
-    HashSet<Integer> set = new HashSet<Integer>(mapCount.keySet());
+    HashSet<Integer> set = new HashSet<>(mapCount.keySet());
 
     // put all variables defined in this statement into the set
     for (Entry<Integer, Integer> en : mapCount.entrySet()) {
@@ -322,8 +322,8 @@ public class VarDefinitionHelper {
 
   private static List<VarExprent> getAllVars(List<Exprent> lst) {
 
-    List<VarExprent> res = new ArrayList<VarExprent>();
-    List<Exprent> listTemp = new ArrayList<Exprent>();
+    List<VarExprent> res = new ArrayList<>();
+    List<Exprent> listTemp = new ArrayList<>();
 
     for (Exprent expr : lst) {
       listTemp.addAll(expr.getAllExprents(true));

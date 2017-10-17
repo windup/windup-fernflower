@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@ package org.jetbrains.java.decompiler.code.cfg;
 import org.jetbrains.java.decompiler.main.DecompilerContext;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ExceptionRangeCFG {
 
-  private List<BasicBlock> protectedRange = new ArrayList<BasicBlock>(); // FIXME: replace with set
+  private List<BasicBlock> protectedRange = new ArrayList<>(); // FIXME: replace with set
 
   private BasicBlock handler;
 
@@ -35,7 +34,7 @@ public class ExceptionRangeCFG {
     this.handler = handler;
 
     if (exceptionType != null) {
-      this.exceptionTypes = new ArrayList<String>(exceptionType);
+      this.exceptionTypes = new ArrayList<>(exceptionType);
     }
   }
 
@@ -105,21 +104,7 @@ public class ExceptionRangeCFG {
       return null;
     }
 
-    Set<String> setExceptionStrings = new HashSet<String>();
-
-    for (String exceptionType : exceptionTypes) { // normalize order
-      setExceptionStrings.add(exceptionType);
-    }
-
-    String ret = "";
-    for (String exception : setExceptionStrings) {
-      if (!ret.isEmpty()) {
-        ret += ":";
-      }
-      ret += exception;
-    }
-
-    return ret;
+    return exceptionTypes.stream().distinct().collect(Collectors.joining(":"));
   }
 
 

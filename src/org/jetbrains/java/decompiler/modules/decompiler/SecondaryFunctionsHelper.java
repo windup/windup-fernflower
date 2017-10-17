@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public class SecondaryFunctionsHelper {
     FunctionExprent.FUNCTION_CADD
   };
 
-  private static final HashMap<Integer, Integer[]> mapNumComparisons = new HashMap<Integer, Integer[]>();
+  private static final HashMap<Integer, Integer[]> mapNumComparisons = new HashMap<>();
 
   static {
     mapNumComparisons.put(FunctionExprent.FUNCTION_EQ,
@@ -102,7 +102,7 @@ public class SecondaryFunctionsHelper {
     while (replaced) {
       replaced = false;
 
-      List<Object> lstObjects = new ArrayList<Object>(stat.getExprents() == null ? stat.getSequentialObjects() : stat.getExprents());
+      List<Object> lstObjects = new ArrayList<>(stat.getExprents() == null ? stat.getSequentialObjects() : stat.getExprents());
 
       for (int i = 0; i < lstObjects.size(); i++) {
         Object obj = lstObjects.get(i);
@@ -229,7 +229,7 @@ public class SecondaryFunctionsHelper {
                 }
 
                 if (val == -1) {
-                  List<Exprent> lstBitNotOperand = new ArrayList<Exprent>();
+                  List<Exprent> lstBitNotOperand = new ArrayList<>();
                   lstBitNotOperand.add(lstOperands.get(1 - i));
                   return new FunctionExprent(FunctionExprent.FUNCTION_BIT_NOT, lstBitNotOperand, fexpr.bytecode);
                 }
@@ -250,7 +250,7 @@ public class SecondaryFunctionsHelper {
                     return lstOperands.get(1 - i);
                   }
                   else {
-                    List<Exprent> lstNotOperand = new ArrayList<Exprent>();
+                    List<Exprent> lstNotOperand = new ArrayList<>();
                     lstNotOperand.add(lstOperands.get(1 - i));
                     return new FunctionExprent(FunctionExprent.FUNCTION_BOOL_NOT, lstNotOperand, fexpr.bytecode);
                   }
@@ -262,10 +262,10 @@ public class SecondaryFunctionsHelper {
             if (lstOperands.get(0).type == Exprent.EXPRENT_CONST) {
               int val = ((ConstExprent)lstOperands.get(0)).getIntValue();
               if (val == 0) {
-                return new ConstExprent(VarType.VARTYPE_BOOLEAN, new Integer(1), fexpr.bytecode);
+                return new ConstExprent(VarType.VARTYPE_BOOLEAN, Integer.valueOf(1), fexpr.bytecode);
               }
               else {
-                return new ConstExprent(VarType.VARTYPE_BOOLEAN, new Integer(0), fexpr.bytecode);
+                return new ConstExprent(VarType.VARTYPE_BOOLEAN, Integer.valueOf(0), fexpr.bytecode);
               }
             }
             break;
@@ -300,8 +300,8 @@ public class SecondaryFunctionsHelper {
             FunctionExprent iff = new FunctionExprent(FunctionExprent.FUNCTION_IIF, Arrays.asList(
               new FunctionExprent(FunctionExprent.FUNCTION_LT, Arrays.asList(new VarExprent(var, type, varProc),
                 ConstExprent.getZeroConstant(type.type)), null),
-              new ConstExprent(VarType.VARTYPE_INT, new Integer(-1), null),
-              new ConstExprent(VarType.VARTYPE_INT, new Integer(1), null)), null);
+              new ConstExprent(VarType.VARTYPE_INT, Integer.valueOf(-1), null),
+              new ConstExprent(VarType.VARTYPE_INT, Integer.valueOf(1), null)), null);
 
             FunctionExprent head = new FunctionExprent(FunctionExprent.FUNCTION_EQ, Arrays.asList(
               new AssignmentExprent(new VarExprent(var, type, varProc),
@@ -312,7 +312,7 @@ public class SecondaryFunctionsHelper {
             varProc.setVarType(new VarVersionPair(var, 0), type);
 
             return new FunctionExprent(FunctionExprent.FUNCTION_IIF, Arrays.asList(
-              head, new ConstExprent(VarType.VARTYPE_INT, new Integer(0), null), iff), fexpr.bytecode);
+              head, new ConstExprent(VarType.VARTYPE_INT, Integer.valueOf(0), null), iff), fexpr.bytecode);
         }
         break;
       case Exprent.EXPRENT_ASSIGNMENT: // check for conditional assignment

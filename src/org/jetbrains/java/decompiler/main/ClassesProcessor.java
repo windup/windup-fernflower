@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import java.util.Map.Entry;
 public class ClassesProcessor {
   public static final int AVERAGE_CLASS_SIZE = 16 * 1024;
 
-  private final Map<String, ClassNode> mapRootClasses = new HashMap<String, ClassNode>();
+  private final Map<String, ClassNode> mapRootClasses = new HashMap<>();
 
   private static class Inner {
     private String simpleName;
@@ -55,10 +55,10 @@ public class ClassesProcessor {
   }
 
   public ClassesProcessor(StructContext context) {
-    Map<String, Inner> mapInnerClasses = new HashMap<String, Inner>();
-    Map<String, Set<String>> mapNestedClassReferences = new HashMap<String, Set<String>>();
-    Map<String, Set<String>> mapEnclosingClassReferences = new HashMap<String, Set<String>>();
-    Map<String, String> mapNewSimpleNames = new HashMap<String, String>();
+    Map<String, Inner> mapInnerClasses = new HashMap<>();
+    Map<String, Set<String>> mapNestedClassReferences = new HashMap<>();
+    Map<String, Set<String>> mapEnclosingClassReferences = new HashMap<>();
+    Map<String, String> mapNewSimpleNames = new HashMap<>();
 
     boolean bDecompileInner = DecompilerContext.getOption(IFernflowerPreferences.DECOMPILE_INNER);
 
@@ -66,7 +66,7 @@ public class ClassesProcessor {
     for (StructClass cl : context.getClasses().values()) {
       if (cl.isOwn() && !mapRootClasses.containsKey(cl.qualifiedName)) {
         if (bDecompileInner) {
-          StructInnerClassesAttribute inner = (StructInnerClassesAttribute)cl.getAttributes().getWithKey("InnerClasses");
+          StructInnerClassesAttribute inner = (StructInnerClassesAttribute)cl.getAttribute("InnerClasses");
 
           if (inner != null) {
             for (StructInnerClassesAttribute.Entry entry : inner.getEntries()) {
@@ -116,14 +116,14 @@ public class ClassesProcessor {
                   // reference to the nested class
                   Set<String> set = mapNestedClassReferences.get(enclClassName);
                   if (set == null) {
-                    mapNestedClassReferences.put(enclClassName, set = new HashSet<String>());
+                    mapNestedClassReferences.put(enclClassName, set = new HashSet<>());
                   }
                   set.add(innerName);
 
                   // reference to the enclosing class
                   set = mapEnclosingClassReferences.get(innerName);
                   if (set == null) {
-                    mapEnclosingClassReferences.put(innerName, set = new HashSet<String>());
+                    mapEnclosingClassReferences.put(innerName, set = new HashSet<>());
                   }
                   set.add(enclClassName);
                 }
@@ -143,8 +143,8 @@ public class ClassesProcessor {
       for (Entry<String, ClassNode> ent : mapRootClasses.entrySet()) {
         // root class?
         if (!mapInnerClasses.containsKey(ent.getKey())) {
-          Set<String> setVisited = new HashSet<String>();
-          LinkedList<String> stack = new LinkedList<String>();
+          Set<String> setVisited = new HashSet<>();
+          LinkedList<String> stack = new LinkedList<>();
 
           stack.add(ent.getKey());
           setVisited.add(ent.getKey());
@@ -157,7 +157,7 @@ public class ClassesProcessor {
             if (setNestedClasses != null) {
 
               StructClass scl = superNode.classStruct;
-              StructInnerClassesAttribute inner = (StructInnerClassesAttribute)scl.getAttributes().getWithKey("InnerClasses");
+              StructInnerClassesAttribute inner = (StructInnerClassesAttribute)scl.getAttribute("InnerClasses");
 
               if (inner == null || inner.getEntries().isEmpty()) {
                 DecompilerContext.getLogger().writeMessage(superClass + " does not contain inner classes!", IFernflowerLogger.Severity.WARN);
@@ -347,10 +347,10 @@ public class ClassesProcessor {
     private ClassWrapper wrapper;
     public String enclosingMethod;
     public InvocationExprent superInvocation;
-    public final Map<String, VarVersionPair> mapFieldsToVars = new HashMap<String, VarVersionPair>();
+    public final Map<String, VarVersionPair> mapFieldsToVars = new HashMap<>();
     public VarType anonymousClassType;
-    public final List<ClassNode> nested = new ArrayList<ClassNode>();
-    public final Set<String> enclosingClasses = new HashSet<String>();
+    public final List<ClassNode> nested = new ArrayList<>();
+    public final Set<String> enclosingClasses = new HashSet<>();
     public ClassNode parent;
     public LambdaInformation lambdaInformation;
     public boolean namelessConstructorStub = false;

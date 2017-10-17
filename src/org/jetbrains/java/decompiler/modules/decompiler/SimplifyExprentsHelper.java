@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -310,7 +310,7 @@ public class SimplifyExprentsHelper {
 
           VarExprent arrvar = (VarExprent)as.getLeft();
 
-          HashMap<Integer, Exprent> mapInit = new HashMap<Integer, Exprent>();
+          HashMap<Integer, Exprent> mapInit = new HashMap<>();
 
           int i = 1;
           while (index + i < list.size() && i <= size) {
@@ -350,7 +350,7 @@ public class SimplifyExprentsHelper {
           if ((arrvar.isStack() && fraction > 0) || (size <= 7 && fraction >= 0.3) ||
               (size > 7 && fraction >= 0.7)) {
 
-            List<Exprent> lstRet = new ArrayList<Exprent>();
+            List<Exprent> lstRet = new ArrayList<>();
 
             VarType arrtype = newex.getNewType().decreaseArrayDim();
 
@@ -813,7 +813,7 @@ public class SimplifyExprentsHelper {
                 }
 
                 if (found) {
-                  List<Exprent> data = new ArrayList<Exprent>();
+                  List<Exprent> data = new ArrayList<>();
                   data.addAll(stif.getFirst().getExprents());
 
                   data.add(new AssignmentExprent(ifvar, new FunctionExprent(FunctionExprent.FUNCTION_IIF,
@@ -854,7 +854,12 @@ public class SimplifyExprentsHelper {
                 return false;
               }
 
-              List<Exprent> data = new ArrayList<Exprent>();
+              // avoid flattening to 'iff' if any of the branches is an 'iff' already
+              if (isIff(ifex.getValue()) || isIff(elseex.getValue())) {
+                return false;
+              }
+
+              List<Exprent> data = new ArrayList<>();
               data.addAll(stif.getFirst().getExprents());
 
               data.add(new ExitExprent(ifex.getExitType(), new FunctionExprent(FunctionExprent.FUNCTION_IIF,
@@ -878,6 +883,10 @@ public class SimplifyExprentsHelper {
     }
 
     return false;
+  }
+
+  private static boolean isIff(Exprent exp) {
+    return exp.type == Exprent.EXPRENT_FUNCTION && ((FunctionExprent) exp).getFuncType() == FunctionExprent.FUNCTION_IIF;
   }
 
   static {
@@ -918,7 +927,7 @@ public class SimplifyExprentsHelper {
 
       assfirst.replaceExprent(assfirst.getRight(), new ConstExprent(VarType.VARTYPE_CLASS, class_name, null));
       
-      List<Exprent> data = new ArrayList<Exprent>();
+      List<Exprent> data = new ArrayList<>();
       data.addAll(stat.getFirst().getExprents());
 
       stat.setExprents(data);

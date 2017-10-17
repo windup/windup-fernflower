@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ public class FastExtendedPostdominanceHelper {
 
   private List<Statement> lstReversePostOrderList;
 
-  private HashMap<Integer, FastFixedSet<Integer>> mapSupportPoints = new HashMap<Integer, FastFixedSet<Integer>>();
+  private HashMap<Integer, FastFixedSet<Integer>> mapSupportPoints = new HashMap<>();
 
-  private final HashMap<Integer, FastFixedSet<Integer>> mapExtPostdominators = new HashMap<Integer, FastFixedSet<Integer>>();
+  private final HashMap<Integer, FastFixedSet<Integer>> mapExtPostdominators = new HashMap<>();
 
   private Statement statement;
 
@@ -40,11 +40,11 @@ public class FastExtendedPostdominanceHelper {
 
     this.statement = statement;
 
-    HashSet<Integer> set = new HashSet<Integer>();
+    HashSet<Integer> set = new HashSet<>();
     for (Statement st : statement.getStats()) {
       set.add(st.id);
     }
-    this.factory = new FastFixedSetFactory<Integer>(set);
+    this.factory = new FastFixedSetFactory<>(set);
 
     lstReversePostOrderList = statement.getReversePostOrderList();
 
@@ -65,8 +65,9 @@ public class FastExtendedPostdominanceHelper {
 
     filterOnDominance(filter);
 
-    HashMap<Integer, Set<Integer>> res = new HashMap<Integer, Set<Integer>>();
-    for (Entry<Integer, FastFixedSet<Integer>> entry : mapExtPostdominators.entrySet()) {
+    Set<Entry<Integer, FastFixedSet<Integer>>> entries = mapExtPostdominators.entrySet();
+    HashMap<Integer, Set<Integer>> res = new HashMap<>(entries.size());
+    for (Entry<Integer, FastFixedSet<Integer>> entry : entries) {
       res.put(entry.getKey(), entry.getValue().toPlainSet());
     }
 
@@ -78,17 +79,17 @@ public class FastExtendedPostdominanceHelper {
 
     DominatorEngine engine = filter.getDomEngine();
 
-    for (Integer head : new HashSet<Integer>(mapExtPostdominators.keySet())) {
+    for (Integer head : new HashSet<>(mapExtPostdominators.keySet())) {
 
       FastFixedSet<Integer> setPostdoms = mapExtPostdominators.get(head);
 
-      LinkedList<Statement> stack = new LinkedList<Statement>();
-      LinkedList<FastFixedSet<Integer>> stackPath = new LinkedList<FastFixedSet<Integer>>();
+      LinkedList<Statement> stack = new LinkedList<>();
+      LinkedList<FastFixedSet<Integer>> stackPath = new LinkedList<>();
 
       stack.add(statement.getStats().getWithKey(head));
       stackPath.add(factory.spawnEmptySet());
 
-      Set<Statement> setVisited = new HashSet<Statement>();
+      Set<Statement> setVisited = new HashSet<>();
 
       setVisited.add(stack.getFirst());
       
@@ -134,7 +135,7 @@ public class FastExtendedPostdominanceHelper {
   private void filterOnExceptionRanges(DominatorTreeExceptionFilter filter) {
 
 
-    for (Integer head : new HashSet<Integer>(mapExtPostdominators.keySet())) {
+    for (Integer head : new HashSet<>(mapExtPostdominators.keySet())) {
 
       FastFixedSet<Integer> set = mapExtPostdominators.get(head);
       for (Iterator<Integer> it = set.iterator(); it.hasNext(); ) {
@@ -151,7 +152,7 @@ public class FastExtendedPostdominanceHelper {
 
   private void removeErroneousNodes() {
 
-    mapSupportPoints = new HashMap<Integer, FastFixedSet<Integer>>();
+    mapSupportPoints = new HashMap<>();
 
     calcReachabilitySuppPoints(StatEdge.TYPE_REGULAR);
 
@@ -161,7 +162,7 @@ public class FastExtendedPostdominanceHelper {
         Integer nodeid = node.id;
 
         FastFixedSet<Integer> setReachability = mapSets.get(nodeid);
-        List<FastFixedSet<Integer>> lstPredSets = new ArrayList<FastFixedSet<Integer>>();
+        List<FastFixedSet<Integer>> lstPredSets = new ArrayList<>();
 
         for (StatEdge prededge : node.getPredecessorEdges(StatEdge.TYPE_REGULAR)) {
           FastFixedSet<Integer> setPred = mapSets.get(prededge.getSource().id);
@@ -173,7 +174,7 @@ public class FastExtendedPostdominanceHelper {
           lstPredSets.add(setPred);
         }
 
-        for (Integer id : setReachability.toPlainSet()) {
+        for (Integer id : setReachability) {
 
           FastFixedSet<Integer> setReachabilityCopy = setReachability.getCopy();
 
@@ -245,7 +246,7 @@ public class FastExtendedPostdominanceHelper {
         Integer nodeid = node.id;
         FastFixedSet<Integer> setReachability = mapSets.get(nodeid);
 
-        for (Integer id : setReachability.toPlainSet()) {
+        for (Integer id : setReachability) {
           mapExtPostdominators.get(id).add(nodeid);
         }
 
@@ -285,7 +286,7 @@ public class FastExtendedPostdominanceHelper {
 
       boolean iterate = false;
 
-      HashMap<Integer, FastFixedSet<Integer>> mapSets = new HashMap<Integer, FastFixedSet<Integer>>();
+      HashMap<Integer, FastFixedSet<Integer>> mapSets = new HashMap<>();
 
       for (Statement stat : lstReversePostOrderList) {
 

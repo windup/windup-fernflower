@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class MethodWrapper {
   public final VarProcessor varproc;
   public final StructMethod methodStruct;
   public final CounterContainer counter;
-  public final HashSet<String> setOuterVarNames = new HashSet<String>();
+  public final HashSet<String> setOuterVarNames = new HashSet<>();
 
   public DirectGraph graph;
   public List<VarVersionPair> signatureFields;
@@ -49,5 +49,10 @@ public class MethodWrapper {
       graph = new FlattenStatementsHelper().buildDirectGraph(root);
     }
     return graph;
+  }
+
+  @Override
+  public String toString() {
+    return methodStruct.getName();
   }
 }

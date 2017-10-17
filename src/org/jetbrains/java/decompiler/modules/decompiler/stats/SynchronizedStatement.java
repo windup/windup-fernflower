@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class SynchronizedStatement extends Statement {
 
   private Statement body;
 
-  private final List<Exprent> headexprent = new ArrayList<Exprent>();
+  private final List<Exprent> headexprent = new ArrayList<>(1);
 
   // *****************************************************************************
   // constructors
@@ -106,7 +106,7 @@ public class SynchronizedStatement extends Statement {
 
   public List<Object> getSequentialObjects() {
 
-    List<Object> lst = new ArrayList<Object>(stats);
+    List<Object> lst = new ArrayList<>(stats);
     lst.add(1, headexprent.get(0));
 
     return lst;

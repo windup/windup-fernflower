@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,11 @@ import org.jetbrains.java.decompiler.struct.match.MatchEngine;
 import org.jetbrains.java.decompiler.struct.match.MatchNode;
 import org.jetbrains.java.decompiler.struct.match.MatchNode.RuleValue;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 public class Exprent implements IMatchable {
   public static final int MULTIPLE_USES = 1;
@@ -72,19 +75,19 @@ public class Exprent implements IMatchable {
   }
 
   public CheckTypesResult checkExprTypeBounds() {
-    return new CheckTypesResult();
+    return null;
   }
 
   public boolean containsExprent(Exprent exprent) {
-    List<Exprent> listTemp = new ArrayList<Exprent>(getAllExprents(true));
-    listTemp.add(this);
-
-    for (Exprent lstExpr : listTemp) {
-      if (lstExpr.equals(exprent)) {
+    if (equals(exprent)) {
+      return true;
+    }
+    List<Exprent> lst = getAllExprents();
+    for (int i = lst.size() - 1; i >= 0; i--) {
+      if (lst.get(i).containsExprent(exprent)) {
         return true;
       }
     }
-
     return false;
   }
 
@@ -102,7 +105,7 @@ public class Exprent implements IMatchable {
     List<Exprent> lstAllExprents = getAllExprents(true);
     lstAllExprents.add(this);
 
-    Set<VarVersionPair> set = new HashSet<VarVersionPair>();
+    Set<VarVersionPair> set = new HashSet<>();
     for (Exprent expr : lstAllExprents) {
       if (expr.type == EXPRENT_VAR) {
         set.add(new VarVersionPair((VarExprent)expr));
@@ -128,7 +131,7 @@ public class Exprent implements IMatchable {
   public void addBytecodeOffsets(Collection<Integer> bytecodeOffsets) {
     if (bytecodeOffsets != null && !bytecodeOffsets.isEmpty()) {
       if (bytecode == null) {
-        bytecode = new HashSet<Integer>(bytecodeOffsets);
+        bytecode = new HashSet<>(bytecodeOffsets);
       }
       else {
         bytecode.addAll(bytecodeOffsets);

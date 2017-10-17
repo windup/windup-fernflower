@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2017 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,9 @@ public class VarTypeProcessor {
 
   private final StructMethod method;
   private final MethodDescriptor methodDescriptor;
-  private final Map<VarVersionPair, VarType> mapExprentMinTypes = new HashMap<VarVersionPair, VarType>();
-  private final Map<VarVersionPair, VarType> mapExprentMaxTypes = new HashMap<VarVersionPair, VarType>();
-  private final Map<VarVersionPair, Integer> mapFinalVars = new HashMap<VarVersionPair, Integer>();
+  private final Map<VarVersionPair, VarType> mapExprentMinTypes = new HashMap<>();
+  private final Map<VarVersionPair, VarType> mapExprentMaxTypes = new HashMap<>();
+  private final Map<VarVersionPair, Integer> mapFinalVars = new HashMap<>();
 
   public VarTypeProcessor(StructMethod mt, MethodDescriptor md) {
     method = mt;
@@ -78,7 +78,7 @@ public class VarTypeProcessor {
     }
 
     // catch variables
-    LinkedList<Statement> stack = new LinkedList<Statement>();
+    LinkedList<Statement> stack = new LinkedList<>();
     stack.add(root);
 
     while (!stack.isEmpty()) {
@@ -155,15 +155,17 @@ public class VarTypeProcessor {
 
     CheckTypesResult result = exprent.checkExprTypeBounds();
 
-    for (CheckTypesResult.ExprentTypePair entry : result.getLstMaxTypeExprents()) {
-      if (entry.type.typeFamily != CodeConstants.TYPE_FAMILY_OBJECT) {
-        changeExprentType(entry.exprent, entry.type, 1);
-      }
-    }
-
     boolean res = true;
-    for (CheckTypesResult.ExprentTypePair entry : result.getLstMinTypeExprents()) {
-      res &= changeExprentType(entry.exprent, entry.type, 0);
+    if (result != null) {
+      for (CheckTypesResult.ExprentTypePair entry : result.getLstMaxTypeExprents()) {
+        if (entry.type.typeFamily != CodeConstants.TYPE_FAMILY_OBJECT) {
+          changeExprentType(entry.exprent, entry.type, 1);
+        }
+      }
+
+      for (CheckTypesResult.ExprentTypePair entry : result.getLstMinTypeExprents()) {
+        res &= changeExprentType(entry.exprent, entry.type, 0);
+      }
     }
 
     return res;
