@@ -86,6 +86,9 @@ public class ExitExprent extends Exprent {
 
       if (retType.type != CodeConstants.TYPE_VOID) {
         buffer.append(' ');
+        if (indent > 450) {
+          throw new RuntimeException("Failed due to excessive recursion... recursion count: " + indent);
+        }
         ExprProcessor.getCastedExprent(value, retType, buffer, indent, false, tracer);
       }
 
