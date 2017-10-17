@@ -1,0 +1,10 @@
+1. git remote add jetbrains_upstream https://github.com/JetBrains/intellij-community.git
+
+2. git checkout -b [BRANCH_NAME] jetbrains_upstream/master
+
+3. git filter-branch --prune-empty --subdirectory-filter plugins/java-decompiler/engine/ 
+
+4. git merge origin
+
+5. Fix merge conflicts and push to upstream
+
